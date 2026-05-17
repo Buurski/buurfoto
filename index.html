@@ -173,10 +173,44 @@
   .float-3 { top: 8%; right: 13%; width: 230px; transform: rotate(8deg); }
   .float-4 { bottom: 8%; left: 12%; width: 240px; transform: rotate(-4deg); }
 
+  @keyframes peek-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
   @media (max-width: 900px) {
-    .float-3, .float-4 { display: none; }
-    .float-1 { left: -20px; width: 120px; }
-    .float-2 { right: -10px; width: 130px; }
+    .float { padding: 8px 8px 30px; will-change: auto; }
+    .float .cap { display: none; }
+    /* All 4 visible — peek from the four corners */
+    .float-1 {
+      top: 6%; bottom: auto;
+      left: -20vw; right: auto;
+      width: 54vw;
+      transform: rotate(-6deg);
+      animation: peek-in 1.2s cubic-bezier(.2,.7,.2,1) 0.35s both;
+    }
+    .float-2 {
+      top: auto; bottom: 7%;
+      right: -20vw; left: auto;
+      width: 54vw;
+      transform: rotate(5deg);
+      animation: peek-in 1.2s cubic-bezier(.2,.7,.2,1) 0.55s both;
+    }
+    .float-3 {
+      display: block;
+      top: 9%; bottom: auto;
+      right: -17vw; left: auto;
+      width: 49vw;
+      transform: rotate(8deg);
+      animation: peek-in 1.2s cubic-bezier(.2,.7,.2,1) 0.45s both;
+    }
+    .float-4 {
+      display: block;
+      top: auto; bottom: 10%;
+      left: -17vw; right: auto;
+      width: 49vw;
+      transform: rotate(-4deg);
+      animation: peek-in 1.2s cubic-bezier(.2,.7,.2,1) 0.65s both;
+    }
   }
 
   .scrollcue {
@@ -930,11 +964,13 @@
   const onScroll = () => {
     if (window.scrollY > 20) nav.classList.add("scrolled");
     else nav.classList.remove("scrolled");
-    const y = window.scrollY;
-    document.querySelectorAll("[data-parallax]").forEach((el) => {
-      const k = parseFloat(el.dataset.parallax || "0");
-      el.style.transform = `translateY(${y * k}px) rotate(${el.dataset.rot || ""})`;
-    });
+    if (window.innerWidth > 900) {
+      const y = window.scrollY;
+      document.querySelectorAll("[data-parallax]").forEach((el) => {
+        const k = parseFloat(el.dataset.parallax || "0");
+        el.style.transform = `translateY(${y * k}px) rotate(${el.dataset.rot || ""})`;
+      });
+    }
   };
   document.querySelectorAll(".float").forEach((el) => {
     const rot = el.classList.contains("float-1") ? "-7deg" :
